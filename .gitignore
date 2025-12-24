@@ -45,6 +45,7 @@ Thumbs.db
 .idea/
 *.iml
 
+# Permitir versionar apenas as Run Configurations compartilhadas
 !.idea/runConfigurations/
 !.idea/runConfigurations/*.xml
 
