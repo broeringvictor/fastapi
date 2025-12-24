@@ -1,176 +1,53 @@
-# Criado por https://www.toptal.com/developers/gitignore/api/python
-# Editar em https://www.toptal.com/developers/gitignore? templates=python
-
-### Python ###
-# Arquivos de byte-compilado / otimizado / DLL
+# Python / FastAPI
 __pycache__/
-*.py[bacalhau]
+*.py[cod]
 *$py.class
 
-# C extensões
-*.so
-
-# Distribuição / embalagem
-. Python
-construir/
-desenvolver-ovos/
-dist/
-downloads/
-ovos/
-.ovos/
-lib/
-lib64/
-partes/
-sdist/
-var/
-rodas/
-share/python-wheels/Tradução
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFESTO
-
-# PyInstallerTradução
-# Normalmente esses arquivos são escritos por um script python de um modelo
-# antes de PyInstaller construir o exe, de modo a injetar data / outras informações nele.
-*.manifesto
-*.spec
-
-# Registros do instalador
-pip-log.txt
-pip-delete-this-directory.txt Em inglês
-
-# Relatórios de teste / cobertura da unidade
-htmlcov/
-.tox/
-.nox/
-.cobertura
-.cobertura. *
-.cache
-nosestests.xml
-cobertura.xml
-*.cover
-*.py, capa
-.hipótese/
-.pytest_cache/
-cobertura/
-
-# Traduções
-*.mo
-*.pot
-
-# Coisas do Django:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-jornal
-
-# Coisas de frasco:
-instância/
-.webassets-cache
-
-# Coisas de sucata:
-.scrapy
-
-# Documentação da Esfinge
-docs/_build/
-
-# PyBuilderTradução
-.pybuilder/
-alvo/
-
-# Caderno Jupyter
-.ipynb_checkpoints
-
-# Ipython
-profile_default/
-ipython_config.py
-
-# pyenv
-# Para uma biblioteca ou pacote, você pode querer ignorar esses arquivos, uma vez que o código é
-# destinado a ser executado em vários ambientes; caso contrário, verifique-os em:
-# .python-versão
-
-# pipenv
-# De acordo com pypa/pipenv#598, recomenda-se incluir Pipfile.lock no controle de versão.
-# No entanto, em caso de colaboração, se tiver dependências ou dependências específicas da plataforma
-# não tendo suporte multiplataforma, o pipenv pode instalar dependências que não funcionam ou não
-# instalar todas as dependências necessárias.
-#Pipfile.lock
-
-# poesia
-# Semelhante ao Pipfile.lock, geralmente é recomendável incluir o poetry.lock no controle de versão.
-# Isso é especialmente recomendado para pacotes binários para garantir a reprodutibilidade, e é mais
-# comumente ignorado para bibliotecas.
-# https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-controlTradução
-#poetry.lock
-
-# pdm
-# Semelhante ao Pipfile.lock, geralmente é recomendável incluir pdm.lock no controle de versão.
-#pdm.lock
-# pdm armazena configurações em todo o projeto em .pdm.toml, mas é recomendável não incluí-lo
-# no controle de versão.
-# https://pdm.fming.dev/#use-with-ide
-.pdm.toml
-
-# PEP 582; usado por e.g. github.com/David-OConnor/pyflow e github.com/pdm-project/pdm
-__pypackages__/
-
-# Coisas de aipo
-aipo-champo
-aipo.pid
-
-# SageMath arquivos analisados
-*.sage.py
-
-# Ambientes
-.env
-.venv
-env/
-ven/
+# Virtual environments
+.venv/
+venv/
 ENV/
-env.bak/
-venv.bak/
+env/
 
-# Configurações do projeto Spyder
-.spyderproject
-Projeto .spy
+# Environment variables / secrets
+.env
+.env.*
 
-# Configurações do projeto Rope
-Projeto .rope
+# Test / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.coverage.xml
+pytestdebug.log
 
-# documentação do mkdocs
-/site
-
-# mypy
+# Type check / linters
 .mypy_cache/
 .dmypy.json
-dmypy.json
-
-# Verificador do tipo Pyre
-.pyre/
-
-# pytype analisador de tipo estático
-.pytype/
-
-# Cython símbolos de depuração
-cython_debug/Tradução
-
-# PyCharm
-# O modelo específico do JetBrains é mantido em um JetBrains.gitignore separado que pode
-# ser encontrado em https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-# e pode ser adicionado ao gitignore global ou mesclado neste arquivo.  Por um mais nuclear
-# opção (não recomendado) você pode descomentar o seguinte para ignorar toda a pasta de ideias.
-#.ideia/
-
-### Python Patch ###
-# Poetry arquivo de configuração local - https://python-poetry.org/docs/configuration/#local-configuration
-poetry.toml
-
-# ruff
+.pyright/
+pyrightconfig.json
 .ruff_cache/
 
-# Arquivos de configuração do LSP
-pyrightconfig.json
+# Jupyter
+.ipynb_checkpoints/
 
-# Fim de https://www.toptal.com/developers/gitignore/api/python
+# Packaging / build
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+
+# JetBrains / PyCharm
+.idea/
+*.iml
+
+# uv
+# O lockfile deve ser versionado para reprodutibilidade.
+# uv.lock
+
+# Logs
+*.log

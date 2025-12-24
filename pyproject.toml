@@ -1,0 +1,53 @@
+[project]
+name = "fastapiproject"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.14"
+dependencies = [
+    "bcrypt>=4.0.0",
+    "fastapi>=0.127.0",
+    "httpx>=0.28.1",
+    "polyfactory>=3.2.0",
+    "pydantic-settings>=2.12.0",
+    "pydantic[email]>=2.12.5",
+    "sqlalchemy>=2.0.45",
+    "tzdata>=2025.2",
+    "uvicorn>=0.40.0",
+]
+
+[dependency-groups]
+dev = [
+    "factory-boy>=3.3.3",
+    "pytest>=9.0.2",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.14.10",
+    "taskipy>=1.14.1",
+]
+
+# -------------------------------------------------------
+# testes CONFIGURATION
+[tool.pytest.ini_options]
+pythonpath = "."
+
+
+
+# -------------------------------------------------------
+# linters CONFIGURATION
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.format]
+preview = true
+
+
+# -------------------------------------------------------
+# taskipy CONFIGURATION
+
+
+[tool.taskipy.tasks]
+lint = 'ruff check'
+pre_format = 'ruff check --fix'
+format = 'ruff format'
+pre_test = 'task lint'
+test = 'pytest -s -x --cov=. -vv'
