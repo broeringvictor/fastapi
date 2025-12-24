@@ -45,6 +45,9 @@ Thumbs.db
 .idea/
 *.iml
 
+!.idea/runConfigurations/
+!.idea/runConfigurations/*.xml
+
 # uv
 # O lockfile deve ser versionado para reprodutibilidade.
 # uv.lock

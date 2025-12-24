@@ -1,10 +1,6 @@
-from fastapi import FastAPI, HTTPException
-from http import HTTPStatus
+from fastapi import FastAPI
 
-from app.models.user import User
 from app.schemas.schemas import Message
-from app.schemas.user_schemas import UserCreate, UserCreateResponse, UserPublic
-from app.value_objects.password import Password
 
 
 app = FastAPI()
