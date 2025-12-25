@@ -65,6 +65,20 @@ class User:
         nullable=False,
     )
 
+    @classmethod
+    def create(
+        cls,
+        name: str,
+        email: str,
+        password: str,
+    ) -> User:
+        user = cls(
+            name=name,
+            email=EmailStr(email),
+            password=Password.model_validate(password),
+        )
+        return user
+
     def validar_senha(self, input_password: str) -> bool:
         return self.password.check_password(input_password)
 
