@@ -3,7 +3,7 @@ from pydantic import ValidationError
 
 from app.models.user import User
 from app.schemas.user_schemas import UserPublic
-from app.value_objects.email_vo import Email_vo
+from app.value_objects.email_vo import Email
 
 from test.factories.models import UserFactory
 
@@ -27,7 +27,7 @@ async def test_user_model_creation(session):
     assert user.name == user_data.name
 
     user_schema = UserPublic.model_validate(user)
-    assert isinstance(user_schema.email, Email_vo)
+    assert isinstance(user_schema.email, Email)
     assert user.email.root == user_schema.email.root
 
 
