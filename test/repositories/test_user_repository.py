@@ -15,7 +15,7 @@ async def test_get_user_by_email(session, user_on_db):
     )
 
     assert result is not None
-    assert result.email == "teste_broering@gmail.com"
+    assert result.email.root == "teste_broering@gmail.com"
 
 
 @pytest.mark.asyncio

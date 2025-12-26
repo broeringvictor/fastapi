@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, ConfigDict
 
-from app.value_objects.email import Email
+from app.value_objects.email_vo import Email
 
 
 class UserCreate(BaseModel):

@@ -6,7 +6,8 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models import table_registry
 from app.value_objects.data_time_sp import tz_sp_now
-from app.value_objects.email import Email, EmailType
+# Importa do novo arquivo (email_vo), mas a classe geralmente se mantém como Email
+from app.value_objects.email_vo import Email, EmailType
 from app.value_objects.password import Password, PasswordType
 
 
@@ -20,7 +21,7 @@ class User:
 
     name: Mapped[str] = mapped_column(String(100), nullable=False)
 
-    # Uso do TypeDecorator para persistência correta
+    # Uso do TypeDecorator e do VO Email
     email: Mapped[Email] = mapped_column(
         EmailType(), nullable=False, unique=True, index=True
     )
@@ -42,10 +43,10 @@ class User:
 
     @classmethod
     def create(
-        cls,
-        name: str,
-        email: str,
-        password: str,
+            cls,
+            name: str,
+            email: str,
+            password: str,
     ) -> User:
         return cls(
             name=name,
@@ -54,7 +55,8 @@ class User:
         )
 
     def validar_senha(self, input_password: str) -> bool:
-        return self.password.check_password(input_password)
+        # Atualizado para usar o método verify_password do pwdlib
+        return self.password.verify_password(input_password)
 
     def patch_user(
             self,
