@@ -1,6 +1,5 @@
 import re
 import string
-import secrets
 from pydantic import RootModel, SecretStr, field_validator, ConfigDict
 from sqlalchemy import TypeDecorator, String
 from pwdlib import PasswordHash
@@ -39,7 +38,7 @@ class Password(RootModel):
             raise ValueError("A senha deve ter entre 8 e 16 caracteres.")
 
         if not _REGEX_HAS_LETTER.search(senha) or not _REGEX_HAS_NUMBER.search(
-                senha
+            senha
         ):
             raise ValueError("A senha deve conter letras e números.")
 

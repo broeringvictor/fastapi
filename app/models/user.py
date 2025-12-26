@@ -6,6 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models import table_registry
 from app.value_objects.data_time_sp import tz_sp_now
+
 # Importa do novo arquivo (email_vo), mas a classe geralmente se mantém como Email
 from app.value_objects.email_vo import Email, EmailType
 from app.value_objects.password import Password, PasswordType
@@ -43,10 +44,10 @@ class User:
 
     @classmethod
     def create(
-            cls,
-            name: str,
-            email: str,
-            password: str,
+        cls,
+        name: str,
+        email: str,
+        password: str,
     ) -> User:
         return cls(
             name=name,
@@ -59,10 +60,10 @@ class User:
         return self.password.verify_password(input_password)
 
     def patch_user(
-            self,
-            name: str | None = None,
-            new_email: str | None = None,
-            password: str | None = None,
+        self,
+        name: str | None = None,
+        new_email: str | None = None,
+        password: str | None = None,
     ) -> None:
         """Atualiza os atributos da instância se os valores forem fornecidos."""
         if name is not None:

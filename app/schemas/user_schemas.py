@@ -33,3 +33,8 @@ class UserPatch(BaseModel):
     new_email: EmailStr | None = None
     password: str | None = None
     model_config = ConfigDict(from_attributes=True)
+
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str

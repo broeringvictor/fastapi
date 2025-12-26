@@ -5,7 +5,12 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.user import User
-from app.schemas.user_schemas import UserCreate, UserPublic, UserPatch
+from app.schemas.user_schemas import (
+    UserCreate,
+    UserPublic,
+    UserPatch,
+    GetByEmail,
+)
 
 
 async def create_user_repo(
@@ -30,19 +35,19 @@ async def create_user_repo(
         )
 
         session.add(new_user)
-        await session.flush()
-        await session.refresh(new_user)
 
-        return new_user
+    await session.refresh(new_user)
+
+    return new_user
 
 
 async def get_user_by_email_repo(
-    GetByEmail, session: AsyncSession
+    user_input: GetByEmail, session: AsyncSession
 ) -> UserPublic:
     """Recupera um usuário pelo email."""
     try:
         result = await session.scalar(
-            select(User).where(User.email == GetByEmail.email)
+            select(User).where(User.email == user_input.email)
         )
 
         if not result:
@@ -59,14 +64,16 @@ async def get_user_by_email_repo(
 
 
 async def patch_user_repo(
-        user_input: UserPatch, session: AsyncSession
+    user_input: UserPatch, session: AsyncSession
 ) -> User:
     """Edita um usuário existente."""
 
     async with session.begin():
         # 1. Recupera o usuário atual (Await é obrigatório aqui)
         # Assume-se que user_input.email contém o e-mail atual do usuário (identificador)
-        user = await get_user_by_email_repo(user_input.email, session)
+        user = await get_user_by_email_repo(
+            GetByEmail(email=user_input.email), session
+        )
 
         # 2. Se houver troca de e-mail, verifica se o novo e-mail já existe
         if user_input.new_email and user_input.new_email != user_input.email:
@@ -86,9 +93,5 @@ async def patch_user_repo(
             password=user_input.password,
         )
 
-        # 4. Adiciona à sessão (O SQLAlchemy detecta mudanças automaticamente, mas add garante)
-        session.add(user)
-
-    # 5. Refresh para atualizar updated_at e retornar o estado final
     await session.refresh(user)
     return user

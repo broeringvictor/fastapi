@@ -31,8 +31,6 @@ async def test_user_model_creation(session):
     assert user.email.root == user_schema.email.root
 
 
-
-
 def test_user_with_invalid_email_in_model():
     user_data = UserFactory.build()
 
@@ -56,10 +54,7 @@ def test_user_with_invalid_email_in_model():
 
         # CORREÇÃO: Verifica a mensagem definida no seu Value Object Email
         # O Pydantic V2 encapsula o ValueError, então a msg conterá "Email inválido"
-        assert any(
-            "Email inválido" in err["msg"]
-            for err in errors
-        )
+        assert any("Email inválido" in err["msg"] for err in errors)
 
 
 def test_user_with_invalid_password_in_model():
