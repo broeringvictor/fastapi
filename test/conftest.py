@@ -106,7 +106,7 @@ async def user_on_db(session):
 @pytest_asyncio.fixture
 async def token(client, user_on_db):
     response = client.post(
-        "/login",
+        "/auth/",
         json={
             "email": user_on_db.email.root,
             "password": "S@@ecupassword12",

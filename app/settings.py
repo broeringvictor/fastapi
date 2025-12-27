@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -9,7 +11,7 @@ class Settings(BaseSettings):
     """
 
     model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8"
+        env_file=".env", env_file_encoding="utf-8", E
     )
 
     # Database settings (defaults allow tests to run without .env)
@@ -24,7 +26,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int
 
     AUTH_COOKIE_SECURE: bool
-    AUTH_COOKIE_SAMESITE: str
+    AUTH_COOKIE_SAMESITE: Literal["lax", "strict", "none"] = "lax"
 
     @property
     def DATABASE_URL(self):

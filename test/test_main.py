@@ -47,7 +47,7 @@ def test_get_user_by_email(client, user_on_db):
 # 3. Teste de Login e Segurança
 def test_login_success(client, user_on_db):
     response = client.post(
-        "/login",
+        "/auth/",
         json={
             "email": user_on_db.email.root,
             "password": "S@@ecupassword12",  # Senha definida na fixture user_on_db
@@ -62,7 +62,7 @@ def test_login_success(client, user_on_db):
 
 def test_login_wrong_password(client, user_on_db):
     response = client.post(
-        "/login",
+        "/auth/",
         json={
             "email": user_on_db.email.root,
             "password": "WRONG_PASSWORD",
@@ -79,7 +79,7 @@ def test_login_wrong_password(client, user_on_db):
 def test_read_me(client, user_on_db):
     # 1. Faz login para obter o cookie
     client.post(
-        "/login",
+        "/auth/",
         json={"email": user_on_db.email.root, "password": "S@@ecupassword12"},
     )
 
@@ -99,7 +99,7 @@ def test_read_me_unauthorized(client):
 def test_patch_user(client, user_on_db):
     # 1. Login
     client.post(
-        "/login",
+        "/auth/",
         json={"email": user_on_db.email.root, "password": "S@@ecupassword12"},
     )
 
@@ -117,7 +117,7 @@ def test_patch_user(client, user_on_db):
 def test_delete_user(client, user_on_db):
     # 1. Login
     client.post(
-        "/login",
+        "/auth/",
         json={"email": user_on_db.email.root, "password": "S@@ecupassword12"},
     )
 
@@ -145,12 +145,12 @@ def test_delete_user(client, user_on_db):
 def test_logout(client, user_on_db):
     # 1. Login
     client.post(
-        "/login",
+        "/auth/",
         json={"email": user_on_db.email.root, "password": "S@@ecupassword12"},
     )
 
     # 2. Logout
-    response = client.post("/logout")
+    response = client.post("/auth/logout")
     assert response.status_code == HTTPStatus.OK
 
     # 3. Tenta acessar rota protegida
