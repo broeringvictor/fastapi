@@ -49,14 +49,13 @@ async def test_login_returns_refresh_token(client, user_on_db):
 @pytest.mark.asyncio
 async def test_refresh_token_success(client, user_on_db):
     # 1. Login para pegar o refresh token
-    login_response = client.post(
+    client.post(
         "/auth/",
         json={
             "email": user_on_db.email.root,
             "password": "DefaultP@ssw0rd!",
         },
     )
-    refresh_token = login_response.cookies["refresh_token"]
 
     # Limpa os cookies do client para simular expiração do access token
     # (embora o endpoint /refresh leia do cookie, vamos garantir que estamos enviando apenas o necessário se fosse manual,
@@ -92,4 +91,3 @@ async def test_refresh_token_invalid(client):
 
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
     assert response.json()["detail"] == "Invalid refresh token"
-

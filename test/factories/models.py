@@ -4,6 +4,7 @@ from app.models.user import User
 from app.value_objects.password import Password
 from app.value_objects.email_vo import Email
 
+
 class UserFactory(factory.Factory):
     class Meta:
         model = User
@@ -12,5 +13,6 @@ class UserFactory(factory.Factory):
     email = factory.LazyAttribute(
         lambda obj: Email(root=f"{obj.name}@example.com")
     )
-    password = factory.LazyAttribute(lambda o: Password(root=SecretStr("DefaultP@ssw0rd!")))
-
+    password = factory.LazyAttribute(
+        lambda o: Password(root=SecretStr("DefaultP@ssw0rd!"))
+    )

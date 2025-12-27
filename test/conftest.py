@@ -114,5 +114,3 @@ async def token(client, user_on_db):
     )
     assert response.status_code == 200
     return response.cookies.get("access_token")
-
-

@@ -1,12 +1,20 @@
 from datetime import timedelta
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Response, status, Depends, Request
+from fastapi import (
+    APIRouter,
+    HTTPException,
+    Response,
+    status,
+    Depends,
+    Request,
+)
 from sqlalchemy.ext.asyncio import AsyncSession
 import jwt
 from jwt.exceptions import PyJWTError, DecodeError
 
 from app.models.user import User
+from app.repositories.authenticate import get_user_by_email_repo
 from app.schemas.authenticate_schemas import Login
 from app.schemas.user_schemas import UserPublic
 from app.security import get_current_user
@@ -17,6 +25,7 @@ from app.services.authenticate import (
 )
 from app.settings import Settings
 from infrastructure.db_context import get_session
+
 T_CurrentUser = Annotated[User, Depends(get_current_user)]
 T_Session = Annotated[AsyncSession, Depends(get_session)]
 router = APIRouter(
@@ -47,9 +56,7 @@ async def login(session: T_Session, user_login: Login, response: Response):
         expires_delta=access_token_expires,
     )
 
-    refresh_token = create_refresh_token_service(
-        data={"sub": user.email.root}
-    )
+    refresh_token = create_refresh_token_service(data={"sub": user.email.root})
 
     response.set_cookie(
         key="access_token",
@@ -77,7 +84,7 @@ async def login(session: T_Session, user_login: Login, response: Response):
 
 
 @router.post("/refresh")
-async def refresh_access_token(request: Request, response: Response):
+async def refresh_access_token(session: T_Session, request: Request, response: Response):
     refresh_token = request.cookies.get("refresh_token")
     if not refresh_token:
         raise HTTPException(
@@ -98,9 +105,12 @@ async def refresh_access_token(request: Request, response: Response):
                 detail="Invalid refresh token",
             )
 
-        # Opcional: Verificar se o usuário ainda existe no banco (recomendado)
-        # Mas para manter simples e rápido, vamos confiar no token por enquanto
-        # ou injetar a sessão se quisermos validar.
+        user = await get_user_by_email_repo(session, email)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User not found",
+            )
 
     except (PyJWTError, DecodeError):
         raise HTTPException(
@@ -112,16 +122,9 @@ async def refresh_access_token(request: Request, response: Response):
     access_token_expires = timedelta(
         minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
-    # Nota: Aqui não temos o ID e Name do usuário facilmente se não buscarmos no banco.
-    # O payload do refresh token só tinha 'sub'.
-    # Se quisermos manter os dados no access token, precisamos buscá-los ou incluí-los no refresh token.
-    # Vamos buscar no banco para garantir consistência.
-
-    # Como não injetei session aqui, vou apenas usar o email no sub por enquanto.
-    # O ideal seria injetar a session e buscar o user.
 
     new_access_token = create_access_token_service(
-        data={"sub": email}, # Se o access token precisa de id/name, isso pode quebrar consumers que esperam isso.
+        data={"sub": user.email.root, "id": user.id, "name": user.name},
         expires_delta=access_token_expires,
     )
 

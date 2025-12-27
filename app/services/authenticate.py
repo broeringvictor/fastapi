@@ -19,9 +19,7 @@ def create_access_token_service(
     if expires_delta:
         expire = now + expires_delta
     else:
-        expire = now + timedelta(
-            minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
-        )
+        expire = now + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
 
     to_encode.update({
         "exp": expire,

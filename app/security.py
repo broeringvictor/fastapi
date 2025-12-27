@@ -17,8 +17,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth")
 
 
 async def get_current_user(
-        request: Request,
-        session: Annotated[AsyncSession, Depends(get_session)],
+    request: Request,
+    session: Annotated[AsyncSession, Depends(get_session)],
 ) -> User:
     token = request.cookies.get("access_token")
 
