@@ -12,19 +12,16 @@ O projeto segue uma arquitetura modular, com foco na separação de responsabili
 
 * **FastAPI**: Framework web principal.
 * **Autenticação JWT**:
-* Implementação de *Access Token* e *Refresh Token*.
-* Armazenamento em **Cookies (HttpOnly)**.
-* Proteção contra CSRF via configurações `SameSite` e `Secure`.
-
-
-
+  * Implementação de *Access Token* e *Refresh Token*.
+  * Armazenamento em **Cookies (HttpOnly)**.
+  * Proteção contra CSRF via configurações `SameSite` e `Secure`.
 
 * **SQLAlchemy (Async)**: Estudo sobre a infraestrutura de banco de dados, incluindo a análise da necessidade de drivers síncronos para a execução de migrações.
 * **Value Objects (VOs)**: Implementação de objetos de valor no domínio, adaptando o conceito frente à ausência de *structs* nativas no Python.
 * **Testes Automatizados**:
-* **Pytest & Pytest-Asyncio**: Testes unitários e de integração.
-* **Factory Boy**: Geração de dados para testes.
-* **Freezegun**: Manipulação temporal para validação de cenários (ex: expiração de tokens).
+  * **Pytest & Pytest-Asyncio**: Testes unitários e de integração.
+  * **Factory Boy**: Geração de dados para testes.
+  * **Freezegun**: Manipulação temporal para validação de cenários (ex: expiração de tokens).
 
 
 * **Gerenciamento de Dependências**: Utilização do `uv` para performance e padronização.
