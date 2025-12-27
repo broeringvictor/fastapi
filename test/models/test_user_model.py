@@ -15,8 +15,8 @@ async def test_user_model_creation(session):
     # Use User.create para garantir que a lógica de VOs (Email/Password) seja exercitada
     user = User.create(
         name=user_data.name,
-        email=user_data.email,
-        password=user_data.password,
+        email=user_data.email.root,
+        password=user_data.password.root.get_secret_value(),
     )
 
     session.add(user)
@@ -47,7 +47,7 @@ def test_user_with_invalid_email_in_model():
             User.create(
                 name=user_data.name,
                 email=invalid_email,
-                password=user_data.password,
+                password=user_data.password.root.get_secret_value(),
             )
 
         errors = excinfo.value.errors()
@@ -64,7 +64,7 @@ def test_user_with_invalid_password_in_model():
         with pytest.raises(ValidationError) as excinfo:
             User.create(
                 name=user_data.name,
-                email=user_data.email,
+                email=user_data.email.root,
                 password=password_input,
             )
 

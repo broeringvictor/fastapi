@@ -1,20 +1,16 @@
-from polyfactory import Use
-from polyfactory.factories.dataclass_factory import DataclassFactory
-
+import factory
+from pydantic import SecretStr
 from app.models.user import User
+from app.value_objects.password import Password
+from app.value_objects.email_vo import Email
 
+class UserFactory(factory.Factory):
+    class Meta:
+        model = User
 
-class UserFactory(DataclassFactory[User]):
-    __model__ = User
+    name = factory.Sequence(lambda n: f"User{n}")
+    email = factory.LazyAttribute(
+        lambda obj: Email(root=f"{obj.name}@example.com")
+    )
+    password = factory.LazyAttribute(lambda o: Password(root=SecretStr("DefaultP@ssw0rd!")))
 
-    # O model User tem o campo `password` (não `plain_password`).
-    # Como o mapeamento aceita string e converte para Password, geramos uma string válida.
-    password: str = Use(lambda: "Teste@123@")
-
-    @classmethod
-    def name(cls) -> str:
-        return cls.__faker__.name()
-
-    @classmethod
-    def email(cls) -> str:
-        return cls.__faker__.email()

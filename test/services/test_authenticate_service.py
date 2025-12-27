@@ -40,9 +40,9 @@ async def test_create_access_token_service_with_expiry():
 
 @pytest.mark.asyncio
 async def test_authenticate_user_service_success(session, user_on_db):
-    # user_on_db has password "S@@ecupassword12" defined in conftest.py
+    # user_on_db has password "DefaultP@ssw0rd!" defined in UserFactory
     user = await authenticate_user_service(
-        session, user_on_db.email.root, "S@@ecupassword12"
+        session, user_on_db.email.root, "DefaultP@ssw0rd!"
     )
     assert user is not None
     assert user.id == user_on_db.id

@@ -50,7 +50,7 @@ def test_login_success(client, user_on_db):
         "/auth/",
         json={
             "email": user_on_db.email.root,
-            "password": "S@@ecupassword12",  # Senha definida na fixture user_on_db
+            "password": "DefaultP@ssw0rd!",  # Senha definida na fixture user_on_db
         },
     )
 
@@ -80,7 +80,7 @@ def test_read_me(client, user_on_db):
     # 1. Faz login para obter o cookie
     client.post(
         "/auth/",
-        json={"email": user_on_db.email.root, "password": "S@@ecupassword12"},
+        json={"email": user_on_db.email.root, "password": "DefaultP@ssw0rd!"},
     )
 
     # 2. O TestClient mantém os cookies automaticamente para as próximas requisições
@@ -100,7 +100,7 @@ def test_patch_user(client, user_on_db):
     # 1. Login
     client.post(
         "/auth/",
-        json={"email": user_on_db.email.root, "password": "S@@ecupassword12"},
+        json={"email": user_on_db.email.root, "password": "DefaultP@ssw0rd!"},
     )
 
     # 2. Patch
@@ -118,7 +118,7 @@ def test_delete_user(client, user_on_db):
     # 1. Login
     client.post(
         "/auth/",
-        json={"email": user_on_db.email.root, "password": "S@@ecupassword12"},
+        json={"email": user_on_db.email.root, "password": "DefaultP@ssw0rd!"},
     )
 
     # 2. Delete (com confirmação True)
@@ -146,7 +146,7 @@ def test_logout(client, user_on_db):
     # 1. Login
     client.post(
         "/auth/",
-        json={"email": user_on_db.email.root, "password": "S@@ecupassword12"},
+        json={"email": user_on_db.email.root, "password": "DefaultP@ssw0rd!"},
     )
 
     # 2. Logout

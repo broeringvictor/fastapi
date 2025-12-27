@@ -1,5 +1,9 @@
 from http import HTTPStatus
+from typing import Annotated
 
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.models.user import User
 from app.schemas.user_schemas import (
     UserCreate,
     GetByEmail,
@@ -14,9 +18,13 @@ from app.repositories.user import (
 )
 from fastapi import Depends, status, Response, APIRouter
 
+from app.security import get_current_user
 from app.settings import Settings
-from app.deps import T_CurrentUser, T_Session
 
+from infrastructure.db_context import get_session
+
+T_CurrentUser = Annotated[User, Depends(get_current_user)]
+T_Session = Annotated[AsyncSession, Depends(get_session)]
 router = APIRouter(
     prefix="/users",
     tags=["users"],

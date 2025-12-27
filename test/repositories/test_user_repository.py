@@ -11,11 +11,11 @@ from test.factories.models import UserFactory
 async def test_get_user_by_email(session, user_on_db):
 
     result = await session.scalar(
-        select(User).where(User.email == "teste_broering@gmail.com")
+        select(User).where(User.email == user_on_db.email)
     )
 
     assert result is not None
-    assert result.email.root == "teste_broering@gmail.com"
+    assert result.email.root == user_on_db.email.root
 
 
 @pytest.mark.asyncio
@@ -25,7 +25,7 @@ async def test_create_user_with_invalid_password(session):
     async def assert_validation_error(password_input, expected_msg):
         user_input = UserCreate(
             name=_user.name,
-            email=_user.email,
+            email=_user.email.root,
             password=password_input,
         )
 
@@ -46,8 +46,8 @@ async def test_create_user_repo(session):
     _user = UserFactory.build()
     user_input = UserCreate(
         name=_user.name,
-        email=_user.email,
-        password=_user.password,
+        email=_user.email.root,
+        password=_user.password.root.get_secret_value(),
     )
 
     user_created = await create_user_repo(user_input, session)

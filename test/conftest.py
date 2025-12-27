@@ -1,7 +1,12 @@
 import os
+import sys
 
-# Ensure auth cookie works with TestClient (http://testserver)
-# Must run before importing the app/settings.
+# Adiciona o diretório raiz ao sys.path para permitir a execução direta deste arquivo
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from test.factories.models import UserFactory
+
+
 os.environ.setdefault("AUTH_COOKIE_SECURE", "false")
 
 import pytest
@@ -16,7 +21,6 @@ from fastapi.testclient import TestClient
 from typing import AsyncGenerator
 
 from app.models import table_registry
-from app.models.user import User
 from main import app
 from infrastructure.db_context import get_session
 
@@ -90,11 +94,7 @@ def client(setup_db):
 # 5. Fixture de Usuário para evitar acoplamento de teste
 @pytest_asyncio.fixture
 async def user_on_db(session):
-    user = User(
-        name="Test User",
-        email="teste_broering@gmail.com",
-        password="S@@ecupassword12",
-    )
+    user = UserFactory.build()
 
     session.add(user)
     await session.commit()
@@ -109,8 +109,10 @@ async def token(client, user_on_db):
         "/auth/",
         json={
             "email": user_on_db.email.root,
-            "password": "S@@ecupassword12",
+            "password": "DefaultP@ssw0rd!",
         },
     )
     assert response.status_code == 200
     return response.cookies.get("access_token")
+
+

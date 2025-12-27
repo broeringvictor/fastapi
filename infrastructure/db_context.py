@@ -7,11 +7,14 @@ from sqlalchemy.ext.asyncio import (
 
 from app.settings import Settings
 
+settings = Settings()
+
 engine = create_async_engine(
-    Settings().DATABASE_URL,
+    settings.DATABASE_URL,
     echo=False,
     pool_pre_ping=True,
 )
+
 async_session_factory = async_sessionmaker(
     bind=engine,
     class_=AsyncSession,
@@ -23,7 +26,7 @@ async_session_factory = async_sessionmaker(
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
     """
     Dependency Injection Generator.
-    Gerencia o ciclo de vida da sessão: abre, entrega e fecha automaticamente.
+    Gerencia o ciclo de vida da sessão. O 'async with' garante o fechamento automático.
     """
     async with async_session_factory() as session:
         try:
@@ -31,7 +34,3 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
         except Exception:
             await session.rollback()
             raise
-        finally:
-            # O 'async with' já garante o fechamento (close), mas o bloco finally
-            # é útil para logs ou limpezas adicionais se necessário.
-            await session.close()

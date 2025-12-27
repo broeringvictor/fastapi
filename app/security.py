@@ -1,21 +1,24 @@
-from fastapi import HTTPException, Request, status
-from fastapi.security import OAuth2PasswordBearer
+from typing import Annotated
+
 import jwt
-from jwt.exceptions import PyJWTError
+from fastapi import HTTPException, Request, status, Depends
+from fastapi.security import OAuth2PasswordBearer
+from jwt.exceptions import PyJWTError, DecodeError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.user import User
 from app.repositories.authenticate import get_user_by_email_repo
 from app.settings import Settings
+from infrastructure.db_context import get_session
 
 settings = Settings()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth")
 
 
 async def get_current_user(
-    request: Request,
-    session: AsyncSession,
+        request: Request,
+        session: Annotated[AsyncSession, Depends(get_session)],
 ) -> User:
     token = request.cookies.get("access_token")
 
@@ -38,9 +41,13 @@ async def get_current_user(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
         email: str = payload.get("sub")
-        if email is None:
+        token_type: str = payload.get("type")
+
+        if email is None or token_type != "access":
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     except PyJWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    except DecodeError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
     user = await get_user_by_email_repo(session, email)
