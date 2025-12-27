@@ -1,5 +1,6 @@
 from http import HTTPStatus
 from fastapi import HTTPException
+from pydantic import ValidationError
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -64,34 +65,43 @@ async def get_user_by_email_repo(
 
 
 async def patch_user_repo(
-    user_input: UserPatch, session: AsyncSession
+    user_input: UserPatch,
+    current_user: User,
+    session: AsyncSession,
 ) -> User:
     """Edita um usuário existente."""
 
-    async with session.begin():
-        # 1. Recupera o usuário atual (Await é obrigatório aqui)
-        # Assume-se que user_input.email contém o e-mail atual do usuário (identificador)
-        user = await get_user_by_email_repo(
-            GetByEmail(email=user_input.email), session
+    # 1. Verifica duplicidade de e-mail se houve alteração
+    if (
+        user_input.new_email
+        and user_input.new_email != current_user.email.root
+    ):
+        email_exists = await session.scalar(
+            select(User).where(User.email == user_input.new_email)
         )
-
-        # 2. Se houver troca de e-mail, verifica se o novo e-mail já existe
-        if user_input.new_email and user_input.new_email != user_input.email:
-            email_exists = await session.scalar(
-                select(User).where(User.email == user_input.new_email)
+        if email_exists:
+            raise HTTPException(
+                status_code=HTTPStatus.BAD_REQUEST,
+                detail="New email is already in use.",
             )
-            if email_exists:
-                raise HTTPException(
-                    status_code=HTTPStatus.BAD_REQUEST,
-                    detail="New email is already in use.",
-                )
 
-        # 3. Aplica as alterações na instância carregada
-        user.patch_user(
+    try:
+        # 2. Aplica as alterações (Isso dispara a validação do Password/Email)
+        current_user.patch_user(
             name=user_input.name,
             new_email=user_input.new_email,
             password=user_input.password,
         )
 
-    await session.refresh(user)
-    return user
+        session.add(current_user)
+        await session.commit()
+        await session.refresh(current_user)
+
+        return current_user
+
+    except ValidationError as e:
+        error_details = e.errors(include_url=False, include_context=False)
+
+        raise HTTPException(
+            status_code=HTTPStatus.UNPROCESSABLE_ENTITY, detail=error_details
+        )

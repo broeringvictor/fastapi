@@ -29,10 +29,13 @@ class UserCreateResponse(BaseModel):
 
 class UserPatch(BaseModel):
     name: str | None = None
-    email: EmailStr
     new_email: EmailStr | None = None
     password: str | None = None
     model_config = ConfigDict(from_attributes=True)
+
+
+class DeleteUser(BaseModel):
+    confirmation: bool
 
 
 class UserLogin(BaseModel):

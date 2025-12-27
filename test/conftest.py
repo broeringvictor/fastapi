@@ -1,3 +1,9 @@
+import os
+
+# Ensure auth cookie works with TestClient (http://testserver)
+# Must run before importing the app/settings.
+os.environ.setdefault("AUTH_COOKIE_SECURE", "false")
+
 import pytest
 import pytest_asyncio
 from sqlalchemy.ext.asyncio import (
@@ -95,3 +101,16 @@ async def user_on_db(session):
     await session.refresh(user)
 
     return user
+
+
+@pytest_asyncio.fixture
+async def token(client, user_on_db):
+    response = client.post(
+        "/login",
+        json={
+            "email": user_on_db.email.root,
+            "password": "S@@ecupassword12",
+        },
+    )
+    assert response.status_code == 200
+    return response.cookies.get("access_token")
